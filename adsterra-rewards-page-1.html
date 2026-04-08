@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Your Reward - Free Notes & Discounts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #ec4899;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1f3a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #334155 100%);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            animation: slideDown 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 15px;
+            animation: bounce 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .content {
+            margin-bottom: 30px;
+            animation: slideUp 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .step {
+            flex: 1;
+            height: 4px;
+            background: rgba(100, 116, 139, 0.4);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+
+        .button {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .button-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        }
+
+        .button-primary:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .reward-container {
+            display: none;
+            text-align: center;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .reward-container.show {
+            display: block;
+        }
+
+        .reward-image {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(236, 72, 153, 0.3);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.6));
+            }
+        }
+
+        .reward-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .checkmark {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: var(--success);
+            border-radius: 50%;
+            color: white;
+            line-height: 24px;
+            font-weight: bold;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .status-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #86efac;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-message.info {
+            background: rgba(99, 102, 241, 0.1);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .reward-option {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">🎁</div>
+                <h1 class="title">Unlock Your Reward</h1>
+                <p class="subtitle">Watch a quick video (30-60 seconds) and claim your reward instantly</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step active" id="step1"></div>
+                <div class="step" id="step2"></div>
+                <div class="step" id="step3"></div>
+            </div>
+
+            <!-- Status Messages -->
+            <div class="status-message" id="statusMessage"></div>
+
+            <!-- STEP 1: Initial CTA -->
+            <div id="step1Content" class="content">
+                <div class="info-box">
+                    ✨ Watch a short video and get instant access to your reward - Free Notes, Coupons, or Discounts!
+                </div>
+                <button class="button button-primary" id="watchBtn" onclick="handleStartAd()">
+                    🎬 Watch Video & Unlock
+                </button>
+                <p style="font-size: 12px; color: var(--text-secondary); text-align: center;">
+                    No payment needed • Takes less than 1 minute
+                </p>
+            </div>
+
+            <!-- STEP 2: Watching Ad (Hidden by default) -->
+            <div id="step2Content" class="content" style="display: none;">
+                <div class="info-box">
+                    ▶️ Your video is loading. Please watch the entire video to unlock your reward.
+                </div>
+                <div style="text-align: center; padding: 20px 0;">
+                    <div class="loading-spinner"></div>
+                    <p style="margin-top: 15px; color: var(--text-secondary);">Loading Adsterra ad...</p>
+                </div>
+            </div>
+
+            <!-- STEP 3: Reward Unlock (Hidden by default) -->
+            <div id="step3Content" class="reward-container">
+                <div class="reward-text">
+                    <span class="checkmark">✓</span>
+                    Reward Unlocked!
+                </div>
+                <div style="margin: 20px 0;">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ec4899;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad)' /%3E%3Ctext x='200' y='150' font-size='60' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'%3E🏆%3C/text%3E%3Ctext x='200' y='220' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3EYour Reward%3C/text%3E%3C/svg%3E" alt="Reward" class="reward-image">
+                </div>
+                <!-- Gorilla Reward Image -->
+                <div style="margin: 25px 0; text-align: center;">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ec4899;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='500' fill='url(%23bg)' /%3E%3Ctext x='200' y='250' font-size='120' text-anchor='middle' dominant-baseline='middle'%3E🦍%3C/text%3E%3Ctext x='200' y='380' font-size='32' font-weight='bold' fill='white' text-anchor='middle'%3E☝️ MIDDLE FINGER☝️%3C/text%3E%3C/svg%3E" alt="Gorilla Reward" class="reward-image" style="max-width: 280px;">
+                </div>
+                
+                <p style="color: var(--success); margin-bottom: 20px; line-height: 1.8; font-weight: 600; font-size: 16px;">
+                    Tag your friend and send this!<br>
+                    <span style="color: var(--accent); font-size: 14px;">(If they don't watch, you know what that means 😏)</span>
+                </p>
+
+                <button class="button button-primary" onclick="handleShareReward()" style="margin-bottom: 10px;">
+                    📲 Forward to Your Friend
+                </button>
+                <button class="button" style="background: rgba(99, 102, 241, 0.2); color: var(--text-primary); margin-bottom: 0;" onclick="handleReset()">
+                    Watch Another Video
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adsterra Script -->
+    <script src="https://a.adsterra.com/code/returnprogram/tag_async.js"></script>
+
+    <script>
+        // ==========================================
+        // ADSTERRA CONFIGURATION
+        // ==========================================
+        const ADSTERRA_CONFIG = {
+            PUBLISHER_ID: '5710469', // Your Adsterra Publisher ID (from URL: itstricky90.github.io)
+            ZONE_ID: '28993911',     // Popunder Zone ID (CHANGE IF USING DIFFERENT ZONE)
+            NETWORK_NAME: 'adsterra'
+        };
+
+        // ==========================================
+        // INITIALIZE ADSTERRA
+        // ==========================================
+        let adLoaded = false;
+
+        function initializeAdsterra() {
+            try {
+                // Adsterra async tag loads automatically
+                // We just need to trigger the ad when needed
+                console.log('Adsterra initialized with Publisher ID:', ADSTERRA_CONFIG.PUBLISHER_ID);
+                adLoaded = true;
+            } catch (error) {
+                console.error('Adsterra initialization error:', error);
+                showStatus('Error initializing ad service. Please try again.', 'error');
+            }
+        }
+
+        // ==========================================
+        // HANDLE AD START
+        // ==========================================
+        function handleStartAd() {
+            const btn = document.getElementById('watchBtn');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>Loading ad...';
+
+            // Move to step 2
+            updateStep(1);
+            document.getElementById('step1Content').style.display = 'none';
+            document.getElementById('step2Content').style.display = 'block';
+
+            // Show Adsterra rewarded ad
+            setTimeout(() => {
+                showRewardedAd();
+            }, 500);
+        }
+
+        // ==========================================
+        // SHOW ADSTERRA REWARDED AD
+        // ==========================================
+        function showRewardedAd() {
+            try {
+                // Create fullscreen ad container
+                const adContainer = document.createElement('div');
+                adContainer.id = 'adsterra-ad-container';
+                adContainer.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.95);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                    flex-direction: column;
+                `;
+
+                // Ad player HTML
+                adContainer.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📺</div>
+                        <h2 style="margin-bottom: 10px; font-size: 20px;">Advertisement</h2>
+                        <p style="margin-bottom: 20px; color: #ccc; font-size: 14px;">Please watch the entire video...</p>
+                        
+                        <div style="width: 280px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin: 20px auto;">
+                            <div id="adProgress" style="height: 100%; background: linear-gradient(90deg, #6366f1, #ec4899); width: 0%; border-radius: 4px; transition: width 0.2s;"></div>
+                        </div>
+                        <p id="adTimer" style="margin-top: 15px; font-size: 12px; color: #aaa;">0/45 seconds</p>
+                        <p id="skipMessage" style="margin-top: 20px; font-size: 11px; color: #666; display: none;">You can skip after 5 seconds</p>
+                    </div>
+                `;
+
+                document.body.appendChild(adContainer);
+
+                // ==========================================
+                // SIMULATE AD PLAYBACK (45 seconds for Adsterra)
+                // ==========================================
+                let adDuration = 45; // 45 second ad
+                let elapsed = 0;
+                let canSkip = false;
+
+                const adInterval = setInterval(() => {
+                    elapsed += 0.1;
+                    const progress = (elapsed / adDuration) * 100;
+                    
+                    document.getElementById('adProgress').style.width = progress + '%';
+                    document.getElementById('adTimer').textContent = 
+                        `${Math.floor(elapsed)}/${adDuration} seconds`;
+
+                    // Allow skip after 5 seconds
+                    if (elapsed >= 5 && !canSkip) {
+                        canSkip = true;
+                        document.getElementById('skipMessage').style.display = 'block';
+                        adContainer.style.cursor = 'pointer';
+                        
+                        // Add close button
+                        const closeBtn = document.createElement('div');
+                        closeBtn.innerHTML = '✕ Skip Ad';
+                        closeBtn.style.cssText = `
+                            position: absolute;
+                            top: 20px;
+                            right: 20px;
+                            cursor: pointer;
+                            color: white;
+                            font-size: 14px;
+                            padding: 8px 15px;
+                            background: rgba(255,0,0,0.6);
+                            border-radius: 5px;
+                            transition: all 0.2s;
+                        `;
+                        closeBtn.onmouseover = () => closeBtn.style.background = 'rgba(255,0,0,0.8)';
+                        closeBtn.onmouseout = () => closeBtn.style.background = 'rgba(255,0,0,0.6)';
+                        closeBtn.onclick = () => {
+                            clearInterval(adInterval);
+                            adContainer.parentNode.removeChild(adContainer);
+                            showStatus('Ad skipped. Please try again.', 'info');
+                            resetUI();
+                        };
+                        adContainer.appendChild(closeBtn);
+                    }
+
+                    // Ad completed
+                    if (elapsed >= adDuration) {
+                        clearInterval(adInterval);
+                        completeAdWatch(adContainer);
+                    }
+                }, 100);
+
+            } catch (error) {
+                console.error('Error showing ad:', error);
+                showStatus('Error loading ad. Please try again.', 'error');
+                resetUI();
+            }
+        }
+
+        // ==========================================
+        // AD COMPLETION HANDLER
+        // ==========================================
+        function completeAdWatch(adContainer) {
+            // Remove ad container
+            if (adContainer && adContainer.parentNode) {
+                adContainer.parentNode.removeChild(adContainer);
+            }
+
+            // Update step indicator
+            updateStep(2);
+
+            // Hide step 2, show step 3 (reward)
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step3Content').classList.add('show');
+
+            showStatus('🎉 Reward unlocked! Forward to your friend (if they don\'t watch, you know what that means 😏)', 'success');
+        }
+
+        // ==========================================
+        // SHARE REWARD TO FRIEND
+        // ==========================================
+        function handleShareReward() {
+            const message = "🦍 Got the guts? Watch this and forward it to your bestie 👉 " + window.location.href + "\n\n(If they don't watch = they're gay 😏)";
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(message).then(() => {
+                showStatus('✅ Message copied! Send it to your friend on WhatsApp', 'success');
+            }).catch(() => {
+                // Fallback if clipboard fails
+                alert(message);
+                showStatus('✅ Message ready to send!', 'success');
+            });
+            
+            // Open WhatsApp
+            setTimeout(() => {
+                const whatsappText = encodeURIComponent(message);
+                const whatsappLink = `https://wa.me/?text=${whatsappText}`;
+                window.open(whatsappLink, '_blank');
+            }, 1000);
+        }
+
+        // ==========================================
+        // RESET FOR NEXT AD
+        // ==========================================
+        function handleReset() {
+            resetUI();
+        }
+
+        function resetUI() {
+            document.getElementById('step1Content').style.display = 'block';
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step3Content').classList.remove('show');
+            document.getElementById('watchBtn').disabled = false;
+            document.getElementById('watchBtn').innerHTML = '🎬 Watch Video & Unlock';
+            updateStep(0);
+            clearStatus();
+        }
+
+        // ==========================================
+        // UTILITY FUNCTIONS
+        // ==========================================
+        function updateStep(step) {
+            document.querySelectorAll('.step').forEach((el, idx) => {
+                if (idx <= step) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message show ${type}`;
+        }
+
+        function clearStatus() {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.className = 'status-message';
+        }
+
+        // ==========================================
+        // PAGE LOAD INITIALIZATION
+        // ==========================================
+        window.addEventListener('load', () => {
+            console.log('Page loaded, initializing Adsterra...');
+            initializeAdsterra();
+        });
+    </script>
+</body>
+</html>
